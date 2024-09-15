@@ -17,7 +17,7 @@ class TransferService
             end
 
             dest_wallet = Wallet.find_by_address(@dest_wallet_addr)
-            if (src_wallet.nil?)
+            if (dest_wallet.nil?)
                 raise ActiveRecord::RecordNotFound, I18n.t('errors.dest_wallet_not_found')
             end
         
