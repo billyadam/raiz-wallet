@@ -35,4 +35,6 @@ en:
     insufficient_balance: "Insufficient balance"
     src_wallet_not_found: "Source wallet address not found"
     dest_wallet_not_found: "Destination wallet address not found"
+    user_not_found: "Username not found"
+    invalid_password: "Invalid password"
 
