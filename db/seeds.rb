@@ -2,8 +2,40 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 #
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+
+users = [
+    "Andi",
+    "Budi",
+    "Caca",
+    "Dedi",
+    "Euis",
+    "Fafa",
+    "Gaga",
+    "Hadi",
+    "Ika",
+    "Joko",
+    "Kiki",
+    "Lala",
+    "Momo",
+    "Nana",
+    "Oma",
+    "Papa",
+    "Qiqi",
+    "Rara",
+    "Sisi",
+    "Tata",
+    "Uci",
+    "Vivi",
+    "Wawa", 
+    "Xena",
+    "Yaya",
+    "Zizi"
+]
+
+users.each do |user|
+    username = user.downcase
+    pass = BCrypt::Password.create(username + "123")
+    user = User.create(name: user, username: username, password: pass)
+    
+    wallet = Wallet.create(address: SecureRandom.hex(10), user_id: user.id)
+end

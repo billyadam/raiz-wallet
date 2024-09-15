@@ -1,4 +1,4 @@
-class WithdrawService
+class TransactionService::WithdrawService
     def initialize(wallet_addr, amount)
         @wallet_addr = wallet_addr
         @amount = amount

@@ -3,6 +3,13 @@ class Wallet < ApplicationRecord
     has_one :transfer_to, class_name: 'Transfer', foreign_key: 'src_wallet_id'
     has_one :transfer_from, class_name: 'Transfer', foreign_key: 'dest_wallet_id'
 
+    belongs_to :user
+
+    def self.create_wallet
+        wallet = Wallet.create
+        wallet.save!
+    end
+
     def self.find_by_address(address)
         Wallet.find_by(address: address)
     end

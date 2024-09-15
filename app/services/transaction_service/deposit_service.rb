@@ -1,4 +1,4 @@
-class DepositService
+class TransactionService::DepositService
     def initialize(wallet_addr, amount)
         @wallet_addr = wallet_addr
         @amount = amount

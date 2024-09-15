@@ -30,6 +30,7 @@
 en:
   hello: "Hello world"
   errors: 
+    invalid_token: "Authorization token is invalid"
     wallet_not_found: "Wallet address not found"
     insufficient_balance: "Insufficient balance"
     src_wallet_not_found: "Source wallet address not found"

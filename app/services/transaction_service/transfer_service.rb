@@ -1,4 +1,4 @@
-class TransferService
+class TransactionService::TransferService
     def initialize(src_wallet_addr, dest_wallet_addr, amount)
         @src_wallet_addr = src_wallet_addr
         @dest_wallet_addr = dest_wallet_addr

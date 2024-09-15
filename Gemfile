@@ -42,6 +42,8 @@ group :development, :test do
   gem 'dotenv-rails', require: true
 
   gem 'rspec-rails', require: true
+
+  gem 'bcrypt', require: true
 end
 
 
