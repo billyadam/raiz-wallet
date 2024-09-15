@@ -8,8 +8,8 @@ RSpec.describe Api::TransactionsController, type: :controller do
 			let(:expected_result) { {
 				"message" =>"Withdrawal successful",
 				"data" => {
-				"address" => wallet_id,
-				"amount" => amount
+					"address" => wallet_id,
+					"amount" => amount
 				}
 			}}
 			
