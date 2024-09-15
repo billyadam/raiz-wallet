@@ -4,6 +4,8 @@ RSpec.describe Api::TransactionsController, type: :controller do
 	describe '#withdraw' do
 		let (:wallet_id) { "abcd" }
 		let (:amount) { 500 }
+
+		let (:params) { { address: wallet_id, amount: amount } }
 		context 'when everything success' do
 			let(:expected_result) { {
 				"message" =>"Withdrawal successful",
@@ -16,7 +18,6 @@ RSpec.describe Api::TransactionsController, type: :controller do
 			it 'return 200' do
 				allow_any_instance_of(WithdrawService).to receive(:withdraw)
 
-				params = { address: wallet_id, amount: amount }
 				post :withdraw, params: params
 
 				expect(response).to have_http_status(200)
@@ -28,7 +29,6 @@ RSpec.describe Api::TransactionsController, type: :controller do
 			it 'return 422' do
 				allow_any_instance_of(WithdrawService).to receive(:withdraw).and_raise(UnprocessableError, I18n.t('errors.insufficient_balance'))
 
-				params = { address: wallet_id, amount: amount }
 				post :withdraw, params: params
 
 				expect(response).to have_http_status(422)
@@ -41,7 +41,6 @@ RSpec.describe Api::TransactionsController, type: :controller do
 			it 'return 404' do
 				allow_any_instance_of(WithdrawService).to receive(:withdraw).and_raise(ActiveRecord::RecordNotFound, I18n.t('errors.wallet_not_found'))
 
-				params = { address: wallet_id, amount: amount }
 				post :withdraw, params: params
 
 				expect(response).to have_http_status(404)
