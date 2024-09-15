@@ -49,4 +49,41 @@ RSpec.describe Api::TransactionsController, type: :controller do
 			end
 		end
 	end
+
+	describe '#deposit' do
+		let (:wallet_id) { "abcd" }
+		let (:amount) { 500 }
+
+		let (:params) { { address: wallet_id, amount: amount } }
+		context 'when everything success' do
+			let(:expected_result) { {
+				"message" =>"Deposit successful",
+				"data" => {
+					"address" => wallet_id,
+					"amount" => amount
+				}
+			}}
+			
+			it 'return 200' do
+				allow_any_instance_of(DepositService).to receive(:deposit)
+
+				post :deposit, params: params
+
+				expect(response).to have_http_status(200)
+				expect(JSON.parse(response.body)).to eq(expected_result)
+			end
+		end
+
+		context 'when wallet not found' do
+			it 'return 404' do
+				allow_any_instance_of(DepositService).to receive(:deposit).and_raise(ActiveRecord::RecordNotFound, I18n.t('errors.wallet_not_found'))
+
+				post :deposit, params: params
+
+				expect(response).to have_http_status(404)
+				json_body = JSON.parse(response.body)
+				expect(json_body["message"]).to eq(I18n.t('errors.wallet_not_found'))
+			end
+		end
+	end
 end
