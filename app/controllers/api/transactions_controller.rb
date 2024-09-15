@@ -8,7 +8,7 @@ class Api::TransactionsController < ApplicationController
             withdrawService = TransactionService::WithdrawService.new(addr, amount)
             withdrawService.withdraw()
 
-            return_success_response("Withdrawal successful", {
+            return_success_response(I18n.t("success.withdraw"), {
                 address: addr,
                 amount: amount,
             })
@@ -26,7 +26,7 @@ class Api::TransactionsController < ApplicationController
             depositService = TransactionService::DepositService.new(addr, amount)
             depositService.deposit()
 
-            return_success_response("Deposit successful", {
+            return_success_response(I18n.t("success.deposit"), {
                 address: addr,
                 amount: amount
             })
@@ -45,7 +45,7 @@ class Api::TransactionsController < ApplicationController
             transferService = TransactionService::TransferService.new(src_addr, dst_addr, amount)
             transferService.transfer()
 
-            return_success_response("Transfer successful", {
+            return_success_response(I18n.t("success.transfer"), {
                 source_address: src_addr,
                 destination_address: dst_addr,
                 amount: amount

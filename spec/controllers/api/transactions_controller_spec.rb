@@ -19,7 +19,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 
 		context 'when everything success' do
 			let(:expected_result) { {
-				"message" =>"Withdrawal successful",
+				"message" => I18n.t("success.withdraw"),
 				"data" => {
 					"address" => wallet_addr,
 					"amount" => amount
@@ -97,7 +97,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 
 		context 'when everything success' do
 			let(:expected_result) { {
-				"message" =>"Deposit successful",
+				"message" => I18n.t("success.deposit"),
 				"data" => {
 					"address" => wallet_addr,
 					"amount" => amount

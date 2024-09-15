@@ -7,7 +7,7 @@ class Api::UsersController < ApplicationController
             loginService = UserService::LoginService.new(username, password)
             token = loginService.login()
 
-            return_success_response("Login successful", {
+            return_success_response(I18n.t("success.login"), {
                 token: token
             })
         rescue => e

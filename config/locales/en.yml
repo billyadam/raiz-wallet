@@ -28,7 +28,6 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
   errors: 
     invalid_token: "Authorization token is invalid"
     wallet_not_found: "Wallet address not found"
@@ -37,4 +36,9 @@ en:
     dest_wallet_not_found: "Destination wallet address not found"
     user_not_found: "Username not found"
     invalid_password: "Invalid password"
+  success:
+    deposit: "Deposit successful"
+    transfer: "Transfer successful"
+    withdraw: "Withdrawal successful"
+    login: "Login successful"
 
