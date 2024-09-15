@@ -10,13 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_14_083417) do
+ActiveRecord::Schema[7.2].define(version: 2024_09_15_034323) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "mutations", force: :cascade do |t|
+    t.bigint "wallet_id", null: false
+    t.integer "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["wallet_id"], name: "index_mutations_on_wallet_id"
+  end
+
+  create_table "transfers", force: :cascade do |t|
+    t.bigint "src_wallet_id", null: false
+    t.bigint "dest_wallet_id", null: false
+    t.integer "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dest_wallet_id"], name: "index_transfers_on_dest_wallet_id"
+    t.index ["src_wallet_id"], name: "index_transfers_on_src_wallet_id"
+  end
 
   create_table "wallets", force: :cascade do |t|
     t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_foreign_key "mutations", "wallets"
+  add_foreign_key "transfers", "wallets", column: "dest_wallet_id"
+  add_foreign_key "transfers", "wallets", column: "src_wallet_id"
 end

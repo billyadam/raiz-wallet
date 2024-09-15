@@ -29,3 +29,9 @@
 
 en:
   hello: "Hello world"
+  errors: 
+    wallet_not_found: "Wallet address not found"
+    insufficient_balance: "Insufficient balance"
+    src_wallet_not_found: "Source wallet address not found"
+    dest_wallet_not_found: "Destination wallet address not found"
+
