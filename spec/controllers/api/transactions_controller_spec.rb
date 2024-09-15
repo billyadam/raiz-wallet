@@ -25,7 +25,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 			end
 		end
 
-		context 'when insufficient balance success' do
+		context 'when insufficient balance' do
 			it 'return 422' do
 				allow_any_instance_of(WithdrawService).to receive(:withdraw).and_raise(UnprocessableError, I18n.t('errors.insufficient_balance'))
 
