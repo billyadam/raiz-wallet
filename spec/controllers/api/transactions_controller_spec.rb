@@ -38,7 +38,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 		end
 
 		context 'when wallet not found' do
-			it 'return 200' do
+			it 'return 404' do
 				allow_any_instance_of(WithdrawService).to receive(:withdraw).and_raise(ActiveRecord::RecordNotFound, I18n.t('errors.wallet_not_found'))
 
 				params = { address: wallet_id, amount: amount }
