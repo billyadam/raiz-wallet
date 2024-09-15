@@ -2,7 +2,7 @@ class Api::TransactionsController < ApplicationController
     def withdraw
         begin
             addr_params = params[:address]
-            amount_params = params[:amount]
+            amount_params = params[:amount].to_i
 
             withdrawService = WithdrawService.new(addr_params, amount_params)
             withdrawService.withdraw()
@@ -23,7 +23,7 @@ class Api::TransactionsController < ApplicationController
     def deposit
         begin
             addr_params = params[:address]
-            amount_params = params[:amount]
+            amount_params = params[:amount].to_i
 
             depositService = DepositService.new(addr_params, amount_params)
             depositService.deposit()
@@ -45,7 +45,7 @@ class Api::TransactionsController < ApplicationController
         begin
             src_addr_params = params[:src_wallet_addr]
             dst_addr_params = params[:dst_wallet_addr]
-            amount_params = params[:amount]
+            amount_params = params[:amount].to_i
 
             transferService = TransferService.new(src_addr_params, dst_addr_params, amount_params)
             transferService.transfer()
