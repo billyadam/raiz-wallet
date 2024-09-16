@@ -46,7 +46,6 @@ class Api::TransactionsController < ApplicationController
             transferService.transfer()
 
             return_success_response(I18n.t("success.transfer"), {
-                source_address: src_addr,
                 destination_address: dst_addr,
                 amount: amount
             })

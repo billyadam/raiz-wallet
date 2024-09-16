@@ -149,4 +149,100 @@ RSpec.describe Api::TransactionsController, type: :controller do
 			end
 		end
 	end
+
+	describe '#transfer' do
+		let (:amount) { 500 }
+		let (:dest_address) { "aasdfasdgasd" }
+		let (:params) { { amount: amount, destination_address: dest_address } }
+
+		let (:transfer_service) { double(TransactionService::TransferService) }
+
+		context 'when everything success' do
+			let(:expected_result) { {
+				"message" => I18n.t("success.transfer"),
+				"data" => {
+					"destination_address" => dest_address,
+					"amount" => amount
+				}
+			}}
+			
+			it 'return 200' do
+				allow(Session).to receive(:get_active_session).with(auth_token).and_return(session)
+				allow(session).to receive(:user).and_return(user)
+				allow(user).to receive(:wallet).and_return(wallet)
+				allow(wallet).to receive(:address).and_return(wallet_addr)
+				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, amount).and_return(transfer_service)
+				allow(transfer_service).to receive(:transfer)
+
+				post :transfer, params: params
+
+				expect(response).to have_http_status(200)
+				expect(JSON.parse(response.body)).to eq(expected_result)
+			end
+		end
+
+		context 'when insufficient balance' do
+			it 'return 422' do
+				allow(Session).to receive(:get_active_session).with(auth_token).and_return(session)
+				allow(session).to receive(:user).and_return(user)
+				allow(user).to receive(:wallet).and_return(wallet)
+				allow(wallet).to receive(:address).and_return(wallet_addr)
+				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, amount).and_return(transfer_service)
+				allow(transfer_service).to receive(:transfer).and_raise(UnprocessableError, I18n.t('errors.insufficient_balance'))
+
+				post :transfer, params: params
+
+				expect(response).to have_http_status(422)
+				json_body = JSON.parse(response.body)
+				expect(json_body["message"]).to eq(I18n.t('errors.insufficient_balance'))
+			end
+		end
+
+		context 'when source wallet not found' do
+			it 'return 404' do
+				allow(Session).to receive(:get_active_session).with(auth_token).and_return(session)
+				allow(session).to receive(:user).and_return(user)
+				allow(user).to receive(:wallet).and_return(wallet)
+				allow(wallet).to receive(:address).and_return(wallet_addr)
+				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, amount).and_return(transfer_service)
+				allow(transfer_service).to receive(:transfer).and_raise(ActiveRecord::RecordNotFound, I18n.t('errors.src_wallet_not_found'))
+
+				post :transfer, params: params
+
+				expect(response).to have_http_status(404)
+				json_body = JSON.parse(response.body)
+				expect(json_body["message"]).to eq(I18n.t('errors.src_wallet_not_found'))
+			end
+		end
+
+		context 'when destination wallet not found' do
+			it 'return 404' do
+				allow(Session).to receive(:get_active_session).with(auth_token).and_return(session)
+				allow(session).to receive(:user).and_return(user)
+				allow(user).to receive(:wallet).and_return(wallet)
+				allow(wallet).to receive(:address).and_return(wallet_addr)
+				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, amount).and_return(transfer_service)
+				allow(transfer_service).to receive(:transfer).and_raise(ActiveRecord::RecordNotFound, I18n.t('errors.dest_wallet_not_found'))
+
+				post :transfer, params: params
+
+				expect(response).to have_http_status(404)
+				json_body = JSON.parse(response.body)
+				expect(json_body["message"]).to eq(I18n.t('errors.dest_wallet_not_found'))
+			end
+		end
+
+		context 'when token invalid' do
+			it 'return 401' do
+				allow(Session).to receive(:get_active_session).with(auth_token).and_return(nil)
+			
+				post :transfer, params: params
+
+
+				expect(response).to have_http_status(401)
+				json_body = JSON.parse(response.body)
+				expect(json_body["message"]).to eq(I18n.t('errors.invalid_token'))
+			end
+		end
+	end
 end
