@@ -8,5 +8,6 @@ class Transfer < ApplicationRecord
         transfer.dest_wallet = dest_wallet
         transfer.amount = amount
         transfer.save!
+        transfer
     end
 end

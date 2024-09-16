@@ -5,11 +5,6 @@ class Wallet < ApplicationRecord
 
     belongs_to :user
 
-    def self.create_wallet
-        wallet = Wallet.create
-        wallet.save!
-    end
-
     def self.find_by_address(address)
         Wallet.find_by(address: address)
     end
