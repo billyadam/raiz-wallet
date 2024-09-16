@@ -11,7 +11,7 @@ class UserService::LoginService
                 raise ActiveRecord::RecordNotFound, I18n.t('errors.user_not_found')
             end
             if !user.authenticate(@password)
-                raise UnprocessableError, I18n.t('errors.invalid_password')
+                raise UnauthorizedError, I18n.t('errors.invalid_password')
             end
             Session.login(user)
         end
