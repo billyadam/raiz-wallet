@@ -75,6 +75,24 @@ RSpec.describe Api::TransactionsController, type: :controller do
 			end
 		end
 
+		context 'when service returns other error' do
+			let(:other_error) { "other error" }
+			it 'return 500' do
+				allow(Session).to receive(:get_active_session).with(auth_token).and_return(session)
+				allow(session).to receive(:user).and_return(user)
+				allow(user).to receive(:wallet).and_return(wallet)
+				allow(wallet).to receive(:address).and_return(wallet_addr)
+				allow(TransactionService::WithdrawService).to receive(:new).with(wallet_addr, amount).and_return(withdraw_service)
+				allow(withdraw_service).to receive(:withdraw).and_raise(StandardError, other_error)
+
+				post :withdraw, params: params
+
+				expect(response).to have_http_status(500)
+				json_body = JSON.parse(response.body)
+				expect(json_body["message"]).to eq(other_error)
+			end
+		end
+
 		context 'when token invalid' do
 			it 'return 401' do
 				allow(Session).to receive(:get_active_session).with(auth_token).and_return(nil)
@@ -132,6 +150,24 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				expect(response).to have_http_status(404)
 				json_body = JSON.parse(response.body)
 				expect(json_body["message"]).to eq(I18n.t('errors.wallet_not_found'))
+			end
+		end
+
+		context 'when service returns other error' do
+			let(:other_error) { "other error" }
+			it 'return 500' do
+				allow(Session).to receive(:get_active_session).with(auth_token).and_return(session)
+				allow(session).to receive(:user).and_return(user)
+				allow(user).to receive(:wallet).and_return(wallet)
+				allow(wallet).to receive(:address).and_return(wallet_addr)
+				allow(TransactionService::DepositService).to receive(:new).with(wallet_addr, amount).and_return(deposit_service)
+				allow(deposit_service).to receive(:deposit).and_raise(StandardError, other_error)
+
+				post :deposit, params: params
+
+				expect(response).to have_http_status(500)
+				json_body = JSON.parse(response.body)
+				expect(json_body["message"]).to eq(other_error)
 			end
 		end
 
@@ -227,6 +263,24 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				expect(response).to have_http_status(404)
 				json_body = JSON.parse(response.body)
 				expect(json_body["message"]).to eq(I18n.t('errors.dest_wallet_not_found'))
+			end
+		end
+
+		context 'when service returns other error' do
+		let(:other_error) { "other error" }
+			it 'return 500' do
+				allow(Session).to receive(:get_active_session).with(auth_token).and_return(session)
+				allow(session).to receive(:user).and_return(user)
+				allow(user).to receive(:wallet).and_return(wallet)
+				allow(wallet).to receive(:address).and_return(wallet_addr)
+				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, amount).and_return(transfer_service)
+				allow(transfer_service).to receive(:transfer).and_raise(StandardError, other_error)
+
+				post :transfer, params: params
+
+				expect(response).to have_http_status(500)
+				json_body = JSON.parse(response.body)
+				expect(json_body["message"]).to eq(other_error)
 			end
 		end
 
