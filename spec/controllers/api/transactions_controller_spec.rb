@@ -81,7 +81,6 @@ RSpec.describe Api::TransactionsController, type: :controller do
 			
 				post :withdraw, params: params
 
-
 				expect(response).to have_http_status(401)
 				json_body = JSON.parse(response.body)
 				expect(json_body["message"]).to eq(I18n.t('errors.invalid_token'))
@@ -141,7 +140,6 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				allow(Session).to receive(:get_active_session).with(auth_token).and_return(nil)
 			
 				post :deposit, params: params
-
 
 				expect(response).to have_http_status(401)
 				json_body = JSON.parse(response.body)
@@ -237,7 +235,6 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				allow(Session).to receive(:get_active_session).with(auth_token).and_return(nil)
 			
 				post :transfer, params: params
-
 
 				expect(response).to have_http_status(401)
 				json_body = JSON.parse(response.body)
