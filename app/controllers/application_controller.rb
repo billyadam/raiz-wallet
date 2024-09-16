@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::API
-    require Rails.root.join('lib', 'errors', 'unprocessable_error')
-    require Rails.root.join('lib', 'errors', 'unauthorized_error')
+    # require Rails.root.join('lib', 'errors', 'unprocessable_error')
+    # require Rails.root.join('lib', 'errors', 'unauthorized_error')
 
     def return_not_found_response(message)
         render json: { 
