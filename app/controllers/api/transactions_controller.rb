@@ -24,10 +24,11 @@ class Api::TransactionsController < ApplicationController
             amount = params[:amount].to_i
 
             depositService = TransactionService::DepositService.new(addr, amount)
-            depositService.deposit()
+            latest_balance = depositService.deposit()
 
             return_success_response(I18n.t("success.deposit"), {
-                deposit_amount: amount
+                deposit_amount: amount,
+                latest_balance: latest_balance
             })
         rescue => e
             handle_exception(e)

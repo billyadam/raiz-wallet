@@ -11,6 +11,8 @@ class TransactionService::DepositService
                 raise ActiveRecord::RecordNotFound, I18n.t('errors.wallet_not_found')
             end
             wallet.deposit(@amount)
+
+            return wallet.get_balance
         end
     end
 end

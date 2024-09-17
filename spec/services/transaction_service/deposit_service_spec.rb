@@ -5,14 +5,17 @@ RSpec.describe TransactionService::DepositService, type: :service do
         let(:wallet_addr) { "xyz12345" }
         let(:wallet) { Wallet.new(id: 1, address: wallet_addr) }
         let(:amount) { 50 }
+        let(:remaining_amount) { 40 }
 
         context "when success" do
             it "creates the deposit correctly" do
                 allow(Wallet).to receive(:find_by_address).and_return(wallet)
                 expect(wallet).to receive(:deposit).with(amount)
+                expect(wallet).to receive(:get_balance).and_return(remaining_amount)
 
                 dep = TransactionService::DepositService.new(wallet_addr, amount)
-                dep.deposit()
+                res = dep.deposit()
+                expect(res).to eq(remaining_amount)
             end
         end
 

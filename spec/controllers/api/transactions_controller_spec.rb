@@ -108,8 +108,9 @@ RSpec.describe Api::TransactionsController, type: :controller do
 	end
 
 	describe '#deposit' do
-		let (:amount) { 500 }
-		let (:params) { { amount: amount } }
+		let (:deposit_amount) { 500 }
+		let (:remaining_amount) { 400 }
+		let (:params) { { amount: deposit_amount } }
 
 		let (:deposit_service) { double(TransactionService::DepositService) }
 
@@ -117,7 +118,8 @@ RSpec.describe Api::TransactionsController, type: :controller do
 			let(:expected_result) { {
 				"message" => I18n.t("success.deposit"),
 				"data" => {
-					"deposit_amount" => amount
+					"deposit_amount" => deposit_amount,
+					"latest_balance" => remaining_amount
 				}
 			}}
 			
@@ -126,8 +128,8 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				allow(session).to receive(:user).and_return(user)
 				allow(user).to receive(:wallet).and_return(wallet)
 				allow(wallet).to receive(:address).and_return(wallet_addr)
-				allow(TransactionService::DepositService).to receive(:new).with(wallet_addr, amount).and_return(deposit_service)
-				allow(deposit_service).to receive(:deposit)
+				allow(TransactionService::DepositService).to receive(:new).with(wallet_addr, deposit_amount).and_return(deposit_service)
+				allow(deposit_service).to receive(:deposit).and_return(remaining_amount)
 
 				post :deposit, params: params
 
@@ -142,7 +144,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				allow(session).to receive(:user).and_return(user)
 				allow(user).to receive(:wallet).and_return(wallet)
 				allow(wallet).to receive(:address).and_return(wallet_addr)
-				allow(TransactionService::DepositService).to receive(:new).with(wallet_addr, amount).and_return(deposit_service)
+				allow(TransactionService::DepositService).to receive(:new).with(wallet_addr, deposit_amount).and_return(deposit_service)
 				allow(deposit_service).to receive(:deposit).and_raise(ActiveRecord::RecordNotFound, I18n.t('errors.wallet_not_found'))
 
 				post :deposit, params: params
@@ -160,7 +162,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				allow(session).to receive(:user).and_return(user)
 				allow(user).to receive(:wallet).and_return(wallet)
 				allow(wallet).to receive(:address).and_return(wallet_addr)
-				allow(TransactionService::DepositService).to receive(:new).with(wallet_addr, amount).and_return(deposit_service)
+				allow(TransactionService::DepositService).to receive(:new).with(wallet_addr, deposit_amount).and_return(deposit_service)
 				allow(deposit_service).to receive(:deposit).and_raise(StandardError, other_error)
 
 				post :deposit, params: params
