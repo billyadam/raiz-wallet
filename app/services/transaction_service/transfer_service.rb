@@ -21,9 +21,16 @@ class TransactionService::TransferService
                 raise ActiveRecord::RecordNotFound, I18n.t('errors.dest_wallet_not_found')
             end
         
-            src_wallet.withdraw(@amount)
-            dest_wallet.deposit(@amount)
-            Transfer.record_transfer(src_wallet, dest_wallet, @amount)
+            withdrawal = src_wallet.withdraw(@amount)
+            deposit = dest_wallet.deposit(@amount)
+            link_mutations(withdrawal, deposit)
         end
+    end
+
+    private
+    
+    def link_mutations(withdrawal, deposit)
+        withdrawal.update(related_mutation: deposit)
+        deposit.update(related_mutation: withdrawal)
     end
 end
