@@ -10,11 +10,18 @@ class UserService::WalletService
             puts mutations
 
             mut_details = mutations.map do |mut|
-                {
+                detail = {
                     time: mut.created_at,
                     type: mut.get_type,
                     amount: mut.amount
                 }
+                if detail[:type] == "Transfer In"
+                    detail[:source_address] = mut.related_mutation.wallet.address
+                end
+                if detail[:type] == "Transfer Out"
+                    detail[:destination_address] = mut.related_mutation.wallet.address
+                end
+                detail
             end
 
             return {
