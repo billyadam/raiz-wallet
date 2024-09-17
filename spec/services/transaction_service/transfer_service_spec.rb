@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe TransactionService::TransferService, type: :service do
     describe "#transfer" do
+        let(:initial_amount) { 80 }
         let(:trf_amount) { 50 }
         let(:remaining_amount) { 30 }
         
@@ -16,7 +17,7 @@ RSpec.describe TransactionService::TransferService, type: :service do
         context "when success" do
             it "creates the transfer correctly" do
                 allow(Wallet).to receive(:find_by_address).with(src_wallet_addr).and_return(src_wallet)
-                allow(src_wallet).to receive(:get_balance).and_return(100, remaining_amount)
+                allow(src_wallet).to receive(:get_balance).and_return(initial_amount, remaining_amount)
                 expect(src_wallet).to receive(:withdraw).with(trf_amount).and_return(src_mutation)
 
                 allow(Wallet).to receive(:find_by_address).with(dest_wallet_addr).and_return(dest_wallet)
@@ -53,7 +54,7 @@ RSpec.describe TransactionService::TransferService, type: :service do
         context "when destination wallet not found" do
             it "raises error" do
                 allow(Wallet).to receive(:find_by_address).with(src_wallet_addr).and_return(src_wallet)
-                allow(src_wallet).to receive(:get_balance).and_return(100)
+                allow(src_wallet).to receive(:get_balance).and_return(initial_amount)
 
                 allow(Wallet).to receive(:find_by_address).with(dest_wallet_addr).and_return(nil)
 
@@ -66,7 +67,7 @@ RSpec.describe TransactionService::TransferService, type: :service do
             let (:other_err) { "other_error" }
             it "raises error" do
                 allow(Wallet).to receive(:find_by_address).with(src_wallet_addr).and_return(src_wallet)
-                allow(src_wallet).to receive(:get_balance).and_return(100)
+                allow(src_wallet).to receive(:get_balance).and_return(initial_amount)
                 expect(src_wallet).to receive(:withdraw).with(trf_amount).and_raise(StandardError, other_err)
 
                 allow(Wallet).to receive(:find_by_address).with(dest_wallet_addr).and_return(dest_wallet)
@@ -80,7 +81,7 @@ RSpec.describe TransactionService::TransferService, type: :service do
             let (:other_err) { "other_error" }
             it "raises error" do
                 allow(Wallet).to receive(:find_by_address).with(src_wallet_addr).and_return(src_wallet)
-                allow(src_wallet).to receive(:get_balance).and_return(100)
+                allow(src_wallet).to receive(:get_balance).and_return(initial_amount)
                 expect(src_wallet).to receive(:withdraw).with(trf_amount).and_return(src_mutation)
 
                 allow(Wallet).to receive(:find_by_address).with(dest_wallet_addr).and_return(dest_wallet)
@@ -97,7 +98,7 @@ RSpec.describe TransactionService::TransferService, type: :service do
             let (:other_err) { "other_error" }
             it "raises error" do
                 allow(Wallet).to receive(:find_by_address).with(src_wallet_addr).and_return(src_wallet)
-                allow(src_wallet).to receive(:get_balance).and_return(100)
+                allow(src_wallet).to receive(:get_balance).and_return(initial_amount)
                 expect(src_wallet).to receive(:withdraw).with(trf_amount).and_return(src_mutation)
 
                 allow(Wallet).to receive(:find_by_address).with(dest_wallet_addr).and_return(dest_wallet)
@@ -116,7 +117,7 @@ RSpec.describe TransactionService::TransferService, type: :service do
             let (:other_err) { "other_error" }
             it "raises error" do
                 allow(Wallet).to receive(:find_by_address).with(src_wallet_addr).and_return(src_wallet)
-                allow(src_wallet).to receive(:get_balance).and_return(100)
+                allow(src_wallet).to receive(:get_balance).and_return(initial_amount)
                 expect(src_wallet).to receive(:withdraw).with(trf_amount).and_return(src_mutation)
 
                 allow(Wallet).to receive(:find_by_address).with(dest_wallet_addr).and_return(dest_wallet)
