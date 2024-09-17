@@ -9,11 +9,12 @@ RSpec.describe TransactionService::WithdrawService, type: :service do
         context "when success" do
             it "creates the withdrawal correctly" do
                 allow(Wallet).to receive(:find_by_address).and_return(wallet)
-                allow(wallet).to receive(:get_balance).and_return(100)
+                allow(wallet).to receive(:get_balance).and_return(100, 50)
                 expect(wallet).to receive(:withdraw).with(amount)
 
                 dep = TransactionService::WithdrawService.new(wallet_addr, amount)
-                dep.withdraw()
+                res = dep.withdraw()
+                expect(res).to eq(50)
             end
         end
 

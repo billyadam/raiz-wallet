@@ -12,8 +12,9 @@ RSpec.describe Api::TransactionsController, type: :controller do
 	end
 
 	describe '#withdraw' do
-		let (:amount) { 500 }
-		let (:params) { { amount: amount } }
+		let (:withdraw_amount) { 500 }
+		let (:remaining_amount) { 400 }
+		let (:params) { { amount: withdraw_amount } }
 
 		let (:withdraw_service) { double(TransactionService::WithdrawService) }
 
@@ -21,8 +22,8 @@ RSpec.describe Api::TransactionsController, type: :controller do
 			let(:expected_result) { {
 				"message" => I18n.t("success.withdraw"),
 				"data" => {
-					"address" => wallet_addr,
-					"amount" => amount
+					"withdrawal_amount" => withdraw_amount,
+					"latest_balance" => remaining_amount
 				}
 			}}
 			
@@ -31,8 +32,8 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				allow(session).to receive(:user).and_return(user)
 				allow(user).to receive(:wallet).and_return(wallet)
 				allow(wallet).to receive(:address).and_return(wallet_addr)
-				allow(TransactionService::WithdrawService).to receive(:new).with(wallet_addr, amount).and_return(withdraw_service)
-				allow(withdraw_service).to receive(:withdraw)
+				allow(TransactionService::WithdrawService).to receive(:new).with(wallet_addr, withdraw_amount).and_return(withdraw_service)
+				allow(withdraw_service).to receive(:withdraw).and_return(remaining_amount)
 
 				post :withdraw, params: params
 
@@ -47,7 +48,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				allow(session).to receive(:user).and_return(user)
 				allow(user).to receive(:wallet).and_return(wallet)
 				allow(wallet).to receive(:address).and_return(wallet_addr)
-				allow(TransactionService::WithdrawService).to receive(:new).with(wallet_addr, amount).and_return(withdraw_service)
+				allow(TransactionService::WithdrawService).to receive(:new).with(wallet_addr, withdraw_amount).and_return(withdraw_service)
 				allow(withdraw_service).to receive(:withdraw).and_raise(UnprocessableError, I18n.t('errors.insufficient_balance'))
 
 				post :withdraw, params: params
@@ -64,7 +65,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				allow(session).to receive(:user).and_return(user)
 				allow(user).to receive(:wallet).and_return(wallet)
 				allow(wallet).to receive(:address).and_return(wallet_addr)
-				allow(TransactionService::WithdrawService).to receive(:new).with(wallet_addr, amount).and_return(withdraw_service)
+				allow(TransactionService::WithdrawService).to receive(:new).with(wallet_addr, withdraw_amount).and_return(withdraw_service)
 				allow(withdraw_service).to receive(:withdraw).and_raise(ActiveRecord::RecordNotFound, I18n.t('errors.wallet_not_found'))
 
 				post :withdraw, params: params
@@ -82,7 +83,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				allow(session).to receive(:user).and_return(user)
 				allow(user).to receive(:wallet).and_return(wallet)
 				allow(wallet).to receive(:address).and_return(wallet_addr)
-				allow(TransactionService::WithdrawService).to receive(:new).with(wallet_addr, amount).and_return(withdraw_service)
+				allow(TransactionService::WithdrawService).to receive(:new).with(wallet_addr, withdraw_amount).and_return(withdraw_service)
 				allow(withdraw_service).to receive(:withdraw).and_raise(StandardError, other_error)
 
 				post :withdraw, params: params
@@ -116,8 +117,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 			let(:expected_result) { {
 				"message" => I18n.t("success.deposit"),
 				"data" => {
-					"address" => wallet_addr,
-					"amount" => amount
+					"deposit_amount" => amount
 				}
 			}}
 			
@@ -196,7 +196,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				"message" => I18n.t("success.transfer"),
 				"data" => {
 					"destination_address" => dest_address,
-					"amount" => amount
+					"transfer_amount" => amount
 				}
 			}}
 			

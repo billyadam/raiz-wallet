@@ -17,6 +17,8 @@ class TransactionService::WithdrawService
             end
         
             wallet.withdraw(@amount)
+            
+            return wallet.get_balance
         end
     end
 end

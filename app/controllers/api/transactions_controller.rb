@@ -6,11 +6,11 @@ class Api::TransactionsController < ApplicationController
             amount = params[:amount].to_i
 
             withdrawService = TransactionService::WithdrawService.new(addr, amount)
-            withdrawService.withdraw()
+            latest_balance = withdrawService.withdraw()
 
             return_success_response(I18n.t("success.withdraw"), {
-                address: addr,
-                amount: amount,
+                withdrawal_amount: amount,
+                latest_balance: latest_balance
             })
         rescue => e
             handle_exception(e)
@@ -27,8 +27,7 @@ class Api::TransactionsController < ApplicationController
             depositService.deposit()
 
             return_success_response(I18n.t("success.deposit"), {
-                address: addr,
-                amount: amount
+                deposit_amount: amount
             })
         rescue => e
             handle_exception(e)
@@ -47,7 +46,7 @@ class Api::TransactionsController < ApplicationController
 
             return_success_response(I18n.t("success.transfer"), {
                 destination_address: dst_addr,
-                amount: amount
+                transfer_amount: amount
             })
         rescue => e
             handle_exception(e)
