@@ -12,7 +12,7 @@ class UserService::WalletService
             mut_details = mutations.map do |mut|
                 {
                     time: mut.created_at,
-                    type: get_type(mut),
+                    type: mut.get_type,
                     amount: mut.amount
                 }
             end
@@ -22,24 +22,6 @@ class UserService::WalletService
                 balance: wallet.get_balance,
                 mutations: mut_details
             }
-        end
-    end
-
-    private 
-
-    def get_type(mut)
-        if (mut.amount < 0)
-            if (mut.related_mutation_id.nil?)
-                return "Withdraw"
-            else
-                return "Transfer Out"
-            end
-        else
-            if (mut.related_mutation_id.nil?)
-                return "Deposit"
-            else
-                return "Transfer In"
-            end
         end
     end
 end
