@@ -20,8 +20,4 @@ class Wallet < ApplicationRecord
     def deposit(amount)
         mutations.create(amount: amount)
     end
-
-    def mutations 
-        return mutations
-    end
 end

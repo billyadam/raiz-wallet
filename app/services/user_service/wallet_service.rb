@@ -7,6 +7,7 @@ class UserService::WalletService
         ActiveRecord::Base.transaction do
             wallet = @user.wallet
             mutations = wallet.mutations
+            puts mutations
 
             mut_details = mutations.map do |mut|
                 {
@@ -18,6 +19,7 @@ class UserService::WalletService
 
             return {
                 address: wallet.address,
+                balance: wallet.get_balance,
                 mutations: mut_details
             }
         end
