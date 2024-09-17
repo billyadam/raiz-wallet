@@ -41,4 +41,5 @@ en:
     transfer: "Transfer successful"
     withdraw: "Withdrawal successful"
     login: "Login successful"
+    profile: "Profile data obtained succesfully"
 

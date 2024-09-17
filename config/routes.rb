@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     resources :users, only: [:login] do
       collection do
         post 'login'
+        get 'profile'
       end
     end
 
