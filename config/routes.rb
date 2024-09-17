@@ -10,9 +10,10 @@ Rails.application.routes.draw do
       collection do
         post 'login'
         get 'profile'
+        get 'wallet'
       end
     end
-    
+
     get 'users', to: 'users#index'
 
     resources :transactions, only: [:transfer, :deposit, :withdraw] do

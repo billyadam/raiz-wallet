@@ -42,5 +42,6 @@ en:
     withdraw: "Withdrawal successful"
     login: "Login successful"
     profile: "Profile data obtained succesfully"
-    user_list: "List of User obtained succesfuly"
+    user_list: "List of User obtained succesfully"
+    wallet: "Wallet data obtained succesfully"
 

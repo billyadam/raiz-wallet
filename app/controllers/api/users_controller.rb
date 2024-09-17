@@ -38,4 +38,17 @@ class Api::UsersController < ApplicationController
             handle_exception(e)
         end
     end
+
+    def wallet 
+        begin
+            user = validate_user_token()
+
+            wallet_service = UserService::WalletService.new(user)
+            wallet = wallet_service.get_wallet()
+
+            return_success_response(I18n.t("success.wallet"), wallet)
+        rescue => e
+            handle_exception(e)
+        end
+    end
 end
