@@ -187,9 +187,10 @@ RSpec.describe Api::TransactionsController, type: :controller do
 	end
 
 	describe '#transfer' do
-		let (:amount) { 500 }
+		let (:trf_amount) { 500 }
+		let (:remaining_amount) { 400 }
 		let (:dest_address) { "aasdfasdgasd" }
-		let (:params) { { amount: amount, destination_address: dest_address } }
+		let (:params) { { amount: trf_amount, destination_address: dest_address } }
 
 		let (:transfer_service) { double(TransactionService::TransferService) }
 
@@ -198,7 +199,8 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				"message" => I18n.t("success.transfer"),
 				"data" => {
 					"destination_address" => dest_address,
-					"transfer_amount" => amount
+					"transfer_amount" => trf_amount,
+					"latest_balance" => remaining_amount
 				}
 			}}
 			
@@ -207,8 +209,8 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				allow(session).to receive(:user).and_return(user)
 				allow(user).to receive(:wallet).and_return(wallet)
 				allow(wallet).to receive(:address).and_return(wallet_addr)
-				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, amount).and_return(transfer_service)
-				allow(transfer_service).to receive(:transfer)
+				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, trf_amount).and_return(transfer_service)
+				allow(transfer_service).to receive(:transfer).and_return(remaining_amount)
 
 				post :transfer, params: params
 
@@ -223,7 +225,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				allow(session).to receive(:user).and_return(user)
 				allow(user).to receive(:wallet).and_return(wallet)
 				allow(wallet).to receive(:address).and_return(wallet_addr)
-				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, amount).and_return(transfer_service)
+				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, trf_amount).and_return(transfer_service)
 				allow(transfer_service).to receive(:transfer).and_raise(UnprocessableError, I18n.t('errors.insufficient_balance'))
 
 				post :transfer, params: params
@@ -240,7 +242,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				allow(session).to receive(:user).and_return(user)
 				allow(user).to receive(:wallet).and_return(wallet)
 				allow(wallet).to receive(:address).and_return(wallet_addr)
-				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, amount).and_return(transfer_service)
+				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, trf_amount).and_return(transfer_service)
 				allow(transfer_service).to receive(:transfer).and_raise(ActiveRecord::RecordNotFound, I18n.t('errors.src_wallet_not_found'))
 
 				post :transfer, params: params
@@ -257,7 +259,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				allow(session).to receive(:user).and_return(user)
 				allow(user).to receive(:wallet).and_return(wallet)
 				allow(wallet).to receive(:address).and_return(wallet_addr)
-				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, amount).and_return(transfer_service)
+				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, trf_amount).and_return(transfer_service)
 				allow(transfer_service).to receive(:transfer).and_raise(ActiveRecord::RecordNotFound, I18n.t('errors.dest_wallet_not_found'))
 
 				post :transfer, params: params
@@ -275,7 +277,7 @@ RSpec.describe Api::TransactionsController, type: :controller do
 				allow(session).to receive(:user).and_return(user)
 				allow(user).to receive(:wallet).and_return(wallet)
 				allow(wallet).to receive(:address).and_return(wallet_addr)
-				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, amount).and_return(transfer_service)
+				allow(TransactionService::TransferService).to receive(:new).with(wallet_addr, dest_address, trf_amount).and_return(transfer_service)
 				allow(transfer_service).to receive(:transfer).and_raise(StandardError, other_error)
 
 				post :transfer, params: params

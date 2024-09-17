@@ -24,6 +24,8 @@ class TransactionService::TransferService
             withdrawal = src_wallet.withdraw(@amount)
             deposit = dest_wallet.deposit(@amount)
             link_mutations(withdrawal, deposit)
+
+            return src_wallet.get_balance
         end
     end
 

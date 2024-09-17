@@ -43,11 +43,12 @@ class Api::TransactionsController < ApplicationController
             amount = params[:amount].to_i
 
             transferService = TransactionService::TransferService.new(src_addr, dst_addr, amount)
-            transferService.transfer()
+            latest_balance = transferService.transfer()
 
             return_success_response(I18n.t("success.transfer"), {
                 destination_address: dst_addr,
-                transfer_amount: amount
+                transfer_amount: amount,
+                latest_balance: latest_balance
             })
         rescue => e
             handle_exception(e)

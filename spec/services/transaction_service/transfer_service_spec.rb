@@ -1,31 +1,33 @@
 require 'rails_helper'
 
 RSpec.describe TransactionService::TransferService, type: :service do
-    describe "#withdraw" do
-        let(:amount) { 50 }
+    describe "#transfer" do
+        let(:trf_amount) { 50 }
+        let(:remaining_amount) { 30 }
         
         let(:src_wallet_addr) { "xyz12345" }
         let(:src_wallet) { Wallet.new(id: 1, address: src_wallet_addr) }
-        let(:src_mutation) { Mutation.new(id: 11, amount: -amount)}
+        let(:src_mutation) { Mutation.new(id: 11, amount: -trf_amount)}
 
         let(:dest_wallet_addr) { "abc12345" }
         let(:dest_wallet) { Wallet.new(id: 2, address: dest_wallet_addr) }
-        let(:dest_mutation) { Mutation.new(id: 22, amount: amount)}
+        let(:dest_mutation) { Mutation.new(id: 22, amount: trf_amount)}
 
         context "when success" do
             it "creates the transfer correctly" do
                 allow(Wallet).to receive(:find_by_address).with(src_wallet_addr).and_return(src_wallet)
-                allow(src_wallet).to receive(:get_balance).and_return(100)
-                expect(src_wallet).to receive(:withdraw).with(amount).and_return(src_mutation)
+                allow(src_wallet).to receive(:get_balance).and_return(100, remaining_amount)
+                expect(src_wallet).to receive(:withdraw).with(trf_amount).and_return(src_mutation)
 
                 allow(Wallet).to receive(:find_by_address).with(dest_wallet_addr).and_return(dest_wallet)
-                expect(dest_wallet).to receive(:deposit).with(amount).and_return(dest_mutation)
+                expect(dest_wallet).to receive(:deposit).with(trf_amount).and_return(dest_mutation)
 
                 expect(src_mutation).to receive(:update).with({related_mutation: dest_mutation}).and_return(true)
                 expect(dest_mutation).to receive(:update).with({related_mutation: src_mutation}).and_return(true)
                 
-                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, amount)
-                dep.transfer()
+                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, trf_amount)
+                res = dep.transfer()
+                expect(res).to eq(remaining_amount)
             end
         end
 
@@ -34,7 +36,7 @@ RSpec.describe TransactionService::TransferService, type: :service do
                 allow(Wallet).to receive(:find_by_address).with(src_wallet_addr).and_return(src_wallet)
                 allow(src_wallet).to receive(:get_balance).and_return(40)
 
-                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, amount)
+                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, trf_amount)
                 expect { dep.transfer() }.to raise_error(UnprocessableError, I18n.t("errors.insufficient_balance"))
             end
         end
@@ -43,7 +45,7 @@ RSpec.describe TransactionService::TransferService, type: :service do
             it "raises error" do
                 allow(Wallet).to receive(:find_by_address).with(src_wallet_addr).and_return(nil)
 
-                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, amount)
+                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, trf_amount)
                 expect { dep.transfer() }.to raise_error(ActiveRecord::RecordNotFound, I18n.t("errors.src_wallet_not_found"))
             end
         end
@@ -55,7 +57,7 @@ RSpec.describe TransactionService::TransferService, type: :service do
 
                 allow(Wallet).to receive(:find_by_address).with(dest_wallet_addr).and_return(nil)
 
-                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, amount)
+                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, trf_amount)
                 expect { dep.transfer() }.to raise_error(ActiveRecord::RecordNotFound, I18n.t("errors.dest_wallet_not_found"))
             end
         end
@@ -65,11 +67,11 @@ RSpec.describe TransactionService::TransferService, type: :service do
             it "raises error" do
                 allow(Wallet).to receive(:find_by_address).with(src_wallet_addr).and_return(src_wallet)
                 allow(src_wallet).to receive(:get_balance).and_return(100)
-                expect(src_wallet).to receive(:withdraw).with(amount).and_raise(StandardError, other_err)
+                expect(src_wallet).to receive(:withdraw).with(trf_amount).and_raise(StandardError, other_err)
 
                 allow(Wallet).to receive(:find_by_address).with(dest_wallet_addr).and_return(dest_wallet)
 
-                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, amount)
+                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, trf_amount)
                 expect { dep.transfer() }.to raise_error(StandardError, other_err)
             end
         end
@@ -79,14 +81,14 @@ RSpec.describe TransactionService::TransferService, type: :service do
             it "raises error" do
                 allow(Wallet).to receive(:find_by_address).with(src_wallet_addr).and_return(src_wallet)
                 allow(src_wallet).to receive(:get_balance).and_return(100)
-                expect(src_wallet).to receive(:withdraw).with(amount).and_return(src_mutation)
+                expect(src_wallet).to receive(:withdraw).with(trf_amount).and_return(src_mutation)
 
                 allow(Wallet).to receive(:find_by_address).with(dest_wallet_addr).and_return(dest_wallet)
-                expect(dest_wallet).to receive(:deposit).with(amount).and_raise(StandardError, other_err)
+                expect(dest_wallet).to receive(:deposit).with(trf_amount).and_raise(StandardError, other_err)
 
                 # expect(Transfer).to receive(:record_transfer).with(src_wallet, dest_wallet, amount).and_return(true)
 
-                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, amount)
+                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, trf_amount)
                 expect { dep.transfer() }.to raise_error(StandardError, other_err)
             end
         end
@@ -96,16 +98,16 @@ RSpec.describe TransactionService::TransferService, type: :service do
             it "raises error" do
                 allow(Wallet).to receive(:find_by_address).with(src_wallet_addr).and_return(src_wallet)
                 allow(src_wallet).to receive(:get_balance).and_return(100)
-                expect(src_wallet).to receive(:withdraw).with(amount).and_return(src_mutation)
+                expect(src_wallet).to receive(:withdraw).with(trf_amount).and_return(src_mutation)
 
                 allow(Wallet).to receive(:find_by_address).with(dest_wallet_addr).and_return(dest_wallet)
-                expect(dest_wallet).to receive(:deposit).with(amount).and_return(dest_mutation)
+                expect(dest_wallet).to receive(:deposit).with(trf_amount).and_return(dest_mutation)
 
 
                 expect(src_mutation).to receive(:update).with({related_mutation: dest_mutation}).and_raise(StandardError, other_err)
                 # expect(dest_mutation).to receive(:update).with({related_mutation: src_mutation}).and_return(true)
 
-                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, amount)
+                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, trf_amount)
                 expect { dep.transfer() }.to raise_error(StandardError, other_err)
             end
         end
@@ -115,16 +117,16 @@ RSpec.describe TransactionService::TransferService, type: :service do
             it "raises error" do
                 allow(Wallet).to receive(:find_by_address).with(src_wallet_addr).and_return(src_wallet)
                 allow(src_wallet).to receive(:get_balance).and_return(100)
-                expect(src_wallet).to receive(:withdraw).with(amount).and_return(src_mutation)
+                expect(src_wallet).to receive(:withdraw).with(trf_amount).and_return(src_mutation)
 
                 allow(Wallet).to receive(:find_by_address).with(dest_wallet_addr).and_return(dest_wallet)
-                expect(dest_wallet).to receive(:deposit).with(amount).and_return(dest_mutation)
+                expect(dest_wallet).to receive(:deposit).with(trf_amount).and_return(dest_mutation)
 
 
                 expect(src_mutation).to receive(:update).with({related_mutation: dest_mutation}).and_return(true)
                 expect(dest_mutation).to receive(:update).with({related_mutation: src_mutation}).and_raise(StandardError, other_err)
 
-                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, amount)
+                dep = TransactionService::TransferService.new(src_wallet_addr, dest_wallet_addr, trf_amount)
                 expect { dep.transfer() }.to raise_error(StandardError, other_err)
             end
         end
