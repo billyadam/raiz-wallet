@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_17_095357) do
+ActiveRecord::Schema[7.2].define(version: 2024_09_17_215819) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -33,16 +33,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_17_095357) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
-  create_table "transfers", force: :cascade do |t|
-    t.bigint "src_wallet_id", null: false
-    t.bigint "dest_wallet_id", null: false
-    t.integer "amount"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["dest_wallet_id"], name: "index_transfers_on_dest_wallet_id"
-    t.index ["src_wallet_id"], name: "index_transfers_on_src_wallet_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "username"
@@ -62,7 +52,5 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_17_095357) do
   add_foreign_key "mutations", "mutations", column: "related_mutation_id"
   add_foreign_key "mutations", "wallets"
   add_foreign_key "sessions", "users"
-  add_foreign_key "transfers", "wallets", column: "dest_wallet_id"
-  add_foreign_key "transfers", "wallets", column: "src_wallet_id"
   add_foreign_key "wallets", "users"
 end
