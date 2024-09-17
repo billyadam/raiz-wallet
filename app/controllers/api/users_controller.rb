@@ -1,4 +1,15 @@
 class Api::UsersController < ApplicationController
+    def index
+        begin
+            login_service = UserService::ListService.new()
+            user_list = login_service.list
+
+            return_success_response(I18n.t("success.user_list"), user_list)
+        rescue => e
+            handle_exception(e)
+        end
+    end
+
     def login
         begin
             username = params[:username]

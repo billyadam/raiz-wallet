@@ -12,6 +12,8 @@ Rails.application.routes.draw do
         get 'profile'
       end
     end
+    
+    get 'users', to: 'users#index'
 
     resources :transactions, only: [:transfer, :deposit, :withdraw] do
       collection do
