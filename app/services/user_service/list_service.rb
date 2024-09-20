@@ -8,7 +8,7 @@ class UserService::ListService
             return users.map do |user|
                 {
                     name: user.name,
-                    username: user.name,
+                    username: user.username,
                     wallet: {
                         address: user.wallet.address
                     }
