@@ -16,8 +16,8 @@ class Api::UsersController < ApplicationController
             raise ActionController::ParameterMissing.new("username") unless permitted[:username]
             raise ActionController::ParameterMissing.new("password") unless permitted[:password]
 
-            username = params[:username]
-            password = params[:password]
+            username = permitted[:username]
+            password = permitted[:password]
 
             loginService = UserService::LoginService.new(username, password)
             token = loginService.login()
