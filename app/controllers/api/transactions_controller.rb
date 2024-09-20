@@ -1,9 +1,12 @@
 class Api::TransactionsController < ApplicationController
     def withdraw
         begin
+            permitted = params.permit(:amount)
+            raise ActionController::ParameterMissing.new("amount") unless permitted[:amount]
+
             user = validate_user_token()
             addr = user.wallet.address
-            amount = params[:amount].to_i
+            amount = permitted[:amount].to_i
 
             withdrawService = TransactionService::WithdrawService.new(addr, amount)
             latest_balance = withdrawService.withdraw()
@@ -19,9 +22,12 @@ class Api::TransactionsController < ApplicationController
 
     def deposit
         begin
+            permitted = params.permit(:amount)
+            raise ActionController::ParameterMissing.new("amount") unless permitted[:amount]
+
             user = validate_user_token()
             addr = user.wallet.address
-            amount = params[:amount].to_i
+            amount = permitted[:amount].to_i
 
             depositService = TransactionService::DepositService.new(addr, amount)
             latest_balance = depositService.deposit()
@@ -37,10 +43,14 @@ class Api::TransactionsController < ApplicationController
 
     def transfer
         begin
+            permitted = params.permit(:amount, :destination_address)
+            raise ActionController::ParameterMissing.new("amount") unless permitted[:amount]
+            raise ActionController::ParameterMissing.new("destination_address") unless permitted[:destination_address]
+
             user = validate_user_token()
             src_addr = user.wallet.address
-            dst_addr = params[:destination_address]
-            amount = params[:amount].to_i
+            dst_addr = permitted[:destination_address]
+            amount = permitted[:amount].to_i
 
             transferService = TransactionService::TransferService.new(src_addr, dst_addr, amount)
             latest_balance = transferService.transfer()

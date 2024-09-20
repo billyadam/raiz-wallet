@@ -53,6 +53,8 @@ class ApplicationController < ActionController::API
             return_unauthorized_response(exception.message)
         when ActiveRecord::RecordNotFound
             return_not_found_response(exception.message)
+        when ActionController::ParameterMissing
+            return_unprocessable_response(exception.message)
         when UnprocessableError
             return_unprocessable_response(exception.message)
         else

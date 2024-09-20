@@ -12,6 +12,10 @@ class Api::UsersController < ApplicationController
 
     def login
         begin
+            permitted = params.permit(:username, :password)
+            raise ActionController::ParameterMissing.new("username") unless permitted[:username]
+            raise ActionController::ParameterMissing.new("password") unless permitted[:password]
+
             username = params[:username]
             password = params[:password]
 

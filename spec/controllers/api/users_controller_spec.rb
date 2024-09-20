@@ -79,6 +79,26 @@ RSpec.describe Api::UsersController, type: :controller do
 			end
 		end
 
+		context 'when params username does not exist' do
+			it 'return 422' do
+				post :login, params: {}
+
+				expect(response).to have_http_status(422)
+				json_body = JSON.parse(response.body)
+				expect(json_body["message"]).to eq("param is missing or the value is empty: username")
+			end
+		end
+
+		context 'when params password does not exist' do
+			it 'return 422' do
+				post :login, params: { username: "johny" }
+
+				expect(response).to have_http_status(422)
+				json_body = JSON.parse(response.body)
+				expect(json_body["message"]).to eq("param is missing or the value is empty: password")
+			end
+		end
+
 		context 'when user not found' do
 			it 'return 404' do
 				allow(UserService::LoginService).to receive(:new).with(username, password).and_return(login_service)

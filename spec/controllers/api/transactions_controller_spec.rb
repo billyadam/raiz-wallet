@@ -42,6 +42,16 @@ RSpec.describe Api::TransactionsController, type: :controller do
 			end
 		end
 
+		context 'when params amount does not exist' do
+			it 'return 422' do
+				post :withdraw, params: {}
+
+				expect(response).to have_http_status(422)
+				json_body = JSON.parse(response.body)
+				expect(json_body["message"]).to eq("param is missing or the value is empty: amount")
+			end
+		end
+
 		context 'when insufficient balance' do
 			it 'return 422' do
 				allow(Session).to receive(:get_active_session).with(auth_token).and_return(session)
@@ -138,6 +148,16 @@ RSpec.describe Api::TransactionsController, type: :controller do
 			end
 		end
 
+		context 'when params amount does not exist' do
+			it 'return 422' do
+				post :deposit, params: {}
+
+				expect(response).to have_http_status(422)
+				json_body = JSON.parse(response.body)
+				expect(json_body["message"]).to eq("param is missing or the value is empty: amount")
+			end
+		end
+
 		context 'when wallet not found' do
 			it 'return 404' do
 				allow(Session).to receive(:get_active_session).with(auth_token).and_return(session)
@@ -216,6 +236,28 @@ RSpec.describe Api::TransactionsController, type: :controller do
 
 				expect(response).to have_http_status(200)
 				expect(JSON.parse(response.body)).to eq(expected_result)
+			end
+		end
+
+		context 'when params amount does not exist' do
+			it 'return 422' do
+				post :transfer, params: {}
+
+				expect(response).to have_http_status(422)
+				json_body = JSON.parse(response.body)
+				expect(json_body["message"]).to eq("param is missing or the value is empty: amount")
+			end
+		end
+
+		context 'when params destination_address does not exist' do
+			it 'return 422' do
+				post :transfer, params: {
+					amount: 400
+				}
+
+				expect(response).to have_http_status(422)
+				json_body = JSON.parse(response.body)
+				expect(json_body["message"]).to eq("param is missing or the value is empty: destination_address")
 			end
 		end
 
