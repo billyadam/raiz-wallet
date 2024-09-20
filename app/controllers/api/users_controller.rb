@@ -1,8 +1,8 @@
 class Api::UsersController < ApplicationController
     def index
         begin
-            login_service = UserService::ListService.new()
-            user_list = login_service.list
+            user_list_service = UserService::ListService.new()
+            user_list = user_list_service.list
 
             return_success_response(I18n.t("success.user_list"), user_list)
         rescue => e

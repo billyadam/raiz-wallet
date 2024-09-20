@@ -3,6 +3,57 @@ require 'rails_helper'
 RSpec.describe Api::UsersController, type: :controller do
 	let(:auth_token) { 'xyz123zbc456tuxyz123zbc456tu' }
 
+	describe '#index' do
+		let(:user_list) {
+			[
+				{
+					"name" => "Johny",
+					"username" => "johny",
+					"wallet" => {
+						"address" => "xyzjohn1"
+					}
+				},
+				{
+					"name" => "Joko",
+					"username" => "joko",
+					"wallet" => {
+						"address" => "xyzjoko2"
+					}
+				},
+				{
+					"name" => "Budi",
+					"username" => "budi",
+					"wallet" => {
+						"address" => "xyzbudi3"
+					}
+				},
+				{
+					"name" => "Kaka",
+					"username" => "kaka",
+					"wallet" => {
+						"address" => "xyzkaka4"
+					}
+				}
+			]
+		}
+
+		let(:user_list_service) { double(UserService::ListService) }
+		let(:expected_result) { {
+			"message" => I18n.t("success.user_list"),
+			"data" => user_list
+		}}
+
+		it 'return 200' do
+			allow(UserService::ListService).to receive(:new).and_return(user_list_service)
+			allow(user_list_service).to receive(:list).and_return(user_list)
+
+			post :index
+
+			expect(response).to have_http_status(200)
+			expect(JSON.parse(response.body)).to eq(expected_result)
+		end
+	end
+
 	describe '#login' do
 		let (:username) { "johny" }
 		let (:password) { "password" }
