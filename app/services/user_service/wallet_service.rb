@@ -7,7 +7,6 @@ class UserService::WalletService
         ActiveRecord::Base.transaction do
             wallet = @user.wallet
             mutations = wallet.mutations
-            puts mutations
 
             mut_details = mutations.map do |mut|
                 detail = {
