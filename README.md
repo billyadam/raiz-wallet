@@ -22,7 +22,7 @@ use ruby version 3.1.0
 this section will explain how to use the app with all the available endpoints
 
 ### User List
-the first endpoint we have is endpoint to list the users available in the database, for the purpose of this demonstration there is no signup functionality, the users will be filled by seed
+the first endpoint we have is endpoint to list the users available in the database, for the purpose of this demonstration there is no signup functionality, the users will be filled by seed each user will have their own wallet with its address, and the wallet address will be a randomly generated string for each user
 
 the endpoint for user list is `GET http://{address}/api/users` that can be hit without any authorization
 
@@ -91,7 +91,7 @@ with payload of
 in the example we are withdrawing 400 from the wallet, can be seen below, the user's latest balance after deposit is shown to be 4600 since previously we deposit 5000 into the account
 
 ### Transaction Transfer
-Our next transaction endpoint is to transfer money from our wallet account to another person's walet, this endpoint, like the previous one, must be hit with the token
+Our next transaction endpoint is to transfer money from our wallet account to another person's wallet, this endpoint, like the previous one, must be hit with the token
 
 the endpoint is `POST http://{address}/api/transactions/transfer`
 with payload of 
