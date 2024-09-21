@@ -13,23 +13,7 @@ users = [
     "Gaga",
     "Hadi",
     "Ika",
-    "Joko",
-    "Kiki",
-    "Lala",
-    "Momo",
-    "Nana",
-    "Oma",
-    "Papa",
-    "Qiqi",
-    "Rara",
-    "Sisi",
-    "Tata",
-    "Uci",
-    "Vivi",
-    "Wawa", 
-    "Xena",
-    "Yaya",
-    "Zizi"
+    "Joko"
 ]
 
 users.each do |user|
