@@ -40,7 +40,7 @@ the login endpoint is `POST http://{address}/api/users/login`
 with the payload 
 ```
 {
-    "username": "username"
+    "username": "username",
     "password": "password"
 }
 ```
