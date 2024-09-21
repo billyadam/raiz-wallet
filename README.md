@@ -112,6 +112,8 @@ in the example we are transferring 300 from our wallet to the address 05d08d8660
 ### User Wallet Mutation History
 This Endpoint is to get data for wallet mutation for your wallet
 
+the endpoint is `GET http://{address}/api/users/wallet`
+
 if we hit it using budi's token we can clearly see the history of transactions we did before, deposit 5000, withdraw 400, and then transfer 300, so the final balance is 4300
 
 ![User Wallet - Budi](img/wallet-budi.png)
