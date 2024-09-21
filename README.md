@@ -1,28 +1,30 @@
 # README
-
 This is A wallet app made for the take-home-test for Raiz Interview 
-made using ruby on rails and postgres
+Made using ruby on rails and postgres
 
 ## Prerequisites
+Ruby version 3.1.0
+Unit test using rspec
 
-use ruby version 3.1.0
+## Running Unit test
+1. Create the test database with `rails db:create RAILS_ENV=test`
+2. Run the migration for test database `rails db:migrate RAILS_ENV=test`
+3. Run the whole unit test with `rspec`
 
 ## Setup
-
 1. Clone the Repository
 2. Copy the env.sample `cp env.sample .env`
-3. fill the .env file with the corresponding credentials mainly regarding the database credentials and port
-4. install dependencies with `bundle install`
-5. setup the database with `rails db:create`
-6. run all the required migration with `rails db:migrate`
-7. run the seed with `rails db:seed`
+3. Fill the .env file with the corresponding credentials mainly regarding the database credentials and port
+4. Install dependencies with `bundle install`
+5. Setup the database with `rails db:create`
+6. Run all the required migration with `rails db:migrate`
+7. Run the seed with `rails db:seed`
 
 ## Using the app
-
-this section will explain how to use the app with all the available endpoints
+This section will explain how to use the app with all the available endpoints
 
 ### User List
-the first endpoint we have is endpoint to list the users available in the database, for the purpose of this demonstration there is no signup functionality, the users will be filled by seed each user will have their own wallet with its address, and the wallet address will be a randomly generated string for each user
+The first endpoint we have is endpoint to list the users available in the database, for the purpose of this demonstration there is no signup functionality, the users will be filled by seed, each user will have their own wallet with its address, and the wallet address will be a randomly generated string for each user
 
 the endpoint for user list is `GET http://{address}/api/users` that can be hit without any authorization
 
@@ -31,7 +33,7 @@ as shown in the example below
 ![User List](img/user-list.png)
 
 ### User Login
-after we have the user list with their address wallet list, we can proceed with login
+After we have the user list with their address wallet list, we can proceed with login
 
 the login endpoint is `POST http://{address}/api/users/login`
 with the payload 
