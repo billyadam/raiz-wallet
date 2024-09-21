@@ -122,3 +122,12 @@ On the other hand, we can try hitting this same endpoint using dedi's token (obt
 and we can see the history shown a Transfer in amount 300 from budi that we previously did, making dedi's final balance to be 300
 
 ![User Wallet - Dedi](img/wallet-dedi.png)
+
+### Stock Price Endpoint
+This Endpoint is used to obtain list of stock price from price_all endpoint from https://rapidapi.com/suneetk92/api/latest-stock-price
+
+X_RAPIDAPI_KEY in the .env first need to be filled for this to work, but no token authorization is needed
+
+the endpoint is `GET http://{address}/api/stocks/price_all`
+
+![Stock List](img/stock-list.png)
