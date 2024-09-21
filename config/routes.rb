@@ -23,5 +23,11 @@ Rails.application.routes.draw do
         post 'withdraw'
       end
     end
+
+    resources :stocks, only: [:price_all] do
+      collection do
+        get 'price_all'
+      end
+    end
   end
 end
