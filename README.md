@@ -1,15 +1,11 @@
 # README
-This is A wallet app made for the take-home-test for Raiz Interview 
+This is A wallet app made for the take-home-test for Raiz Interview
+
 Made using ruby on rails and postgres
 
 ## Prerequisites
-Ruby version 3.1.0
-Unit test using rspec
-
-## Running Unit test
-1. Create the test database with `rails db:create RAILS_ENV=test`
-2. Run the migration for test database `rails db:migrate RAILS_ENV=test`
-3. Run the whole unit test with `rspec`
+1. Ruby version 3.1.0
+2. Unit test using rspec
 
 ## Setup
 1. Clone the Repository
@@ -19,6 +15,11 @@ Unit test using rspec
 5. Setup the database with `rails db:create`
 6. Run all the required migration with `rails db:migrate`
 7. Run the seed with `rails db:seed`
+
+## Running Unit test
+1. Create the test database with `rails db:create RAILS_ENV=test`
+2. Run the migration for test database `rails db:migrate RAILS_ENV=test`
+3. Run the whole unit test with `rspec`
 
 ## Using the app
 This section will explain how to use the app with all the available endpoints
